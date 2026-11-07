@@ -201,8 +201,8 @@
   .cert-contenido-adjunto{display:inline-block;font-size:11.5px;color:var(--brand-700);font-weight:700;margin-top:8px;}
   /* Firma manuscrita: lienzo donde el trabajador dibuja su firma con el dedo, una sola vez, al
      entrar por primera vez a la app — complementa (no sustituye) la huella criptográfica. */
-  #modalFirmaManuscrita .modal-box{max-width:420px;}
-  #lienzoFirmaManuscrita{width:100%;height:160px;display:block;touch-action:none;background:#fff;border:1.5px dashed var(--slate-300);border-radius:10px;cursor:crosshair;}
+  #modalFirmaManuscrita .modal-box,#modalConsentimientoInicial .modal-box{max-width:420px;}
+  #lienzoFirmaManuscrita,#lienzoConsentimientoInicial{width:100%;height:160px;display:block;touch-action:none;background:#fff;border:1.5px dashed var(--slate-300);border-radius:10px;cursor:crosshair;}
 
   /* reloj en vivo — Terminal de Fichaje */
   .reloj-vivo{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-weight:800;font-size:12px;color:var(--brand-700);background:var(--brand-50);border:1px solid var(--brand-200,var(--brand-100));border-radius:999px;padding:4px 10px;white-space:nowrap;}
@@ -266,7 +266,7 @@
   .doc-formal{border:1px solid var(--slate-300);border-radius:10px;overflow:hidden;background:#fff;}
   .doc-formal-header{background:var(--slate-900);color:#fff;padding:12px 14px;}
 </style>
-  <script type="module" crossorigin src="./assets/index-B84FByWv.js"></script>
+  <script type="module" crossorigin src="/assets/index-DtR9B5A1.js"></script>
 </head>
 <body>
 
@@ -445,10 +445,12 @@
     <div class="modal-overlay hidden" id="modalConsentimientoInicial">
       <div class="modal-box">
         <h3>📄 Antes de empezar</h3>
-        <p class="sub-c" id="consentimientoInicialTexto" style="margin:0 0 12px;white-space:pre-wrap;max-height:40vh;overflow-y:auto;"></p>
-        <label>Tu nombre completo, como firma</label>
-        <input type="text" id="consentimientoInicialNombre" placeholder="Nombre y apellidos">
-        <div class="modal-actions">
+        <p class="sub-c" id="consentimientoInicialTexto" style="margin:0 0 12px;white-space:pre-wrap;max-height:30vh;overflow-y:auto;"></p>
+        <p class="sub-c" style="margin:0 0 10px;font-size:.82em;opacity:.8;">Firma electrónica simple registrada conforme al Reglamento (UE) nº 910/2014 (eIDAS) y a la Ley 6/2020, de 11 de noviembre, reguladora de determinados aspectos de los servicios electrónicos de confianza, con el mismo valor probatorio que una firma manuscrita sobre papel (art. 326 LEC).</p>
+        <p class="sub-c" style="margin:0 0 6px;">Firmando como: <strong id="consentimientoInicialNombreMostrado"></strong></p>
+        <canvas id="lienzoConsentimientoInicial"></canvas>
+        <div class="modal-actions" style="justify-content:space-between;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnConsentimientoInicialBorrar">Borrar y repetir</button>
           <button type="button" class="btn btn-sm" id="btnFirmarConsentimientoInicial">✍️ Firmar y continuar</button>
         </div>
       </div>
