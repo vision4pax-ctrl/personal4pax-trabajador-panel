@@ -516,6 +516,27 @@
       <p id="badgeCola" class="badge hidden"></p>
     </div>
 
+    <div class="card card-pad" id="secHistorialFichajes">
+      <h2 class="pg-title">Mi historial de fichajes</h2>
+      <p class="pg-sub">Consulta tus registros de jornada. Acceso según el Art. 34.9 del Estatuto de los Trabajadores.</p>
+      <div style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;">
+        <div>
+          <label>Desde</label>
+          <input type="date" id="historialFichajesDesde">
+        </div>
+        <div>
+          <label>Hasta</label>
+          <input type="date" id="historialFichajesHasta">
+        </div>
+        <button type="button" id="btnConsultarHistorialFichajes">Consultar</button>
+      </div>
+      <p id="historialFichajesMsg" class="sub-c" style="margin-top:8px;"></p>
+      <table style="margin-top:10px;width:100%;">
+        <thead><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Estado</th></tr></thead>
+        <tbody id="listaHistorialFichajes"></tbody>
+      </table>
+    </div>
+
     <div class="grid g4" id="jornadaKpis">
       <div class="card kpi" style="cursor:pointer;" data-kpi-scroll="#formVacaciones"><div class="ic">🌴</div><div><div class="t">Vacaciones disponibles</div><div class="v" id="kpiVacDisponibles">—</div></div></div>
       <div class="card kpi" style="cursor:pointer;" data-kpi-scroll="#formSolicitud"><div class="ic">📄</div><div><div class="t">Solicitudes pendientes</div><div class="v" id="kpiSolPendientes">—</div></div></div>
@@ -830,5 +851,51 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  try {
+    var sb2 = window.supabase.createClient('https://uybljgcimvnfbgumucwo.supabase.co', 'sb_publishable_ndBnIFRxI4TB5YYJiBxdXQ_o_qVnb-i');
+    var hoy = new Date();
+    var hace30 = new Date(hoy.getTime() - 30*24*60*60*1000);
+    function fmtFecha(d){ return d.toISOString().slice(0,10); }
+    var elDesde = document.getElementById('historialFichajesDesde');
+    var elHasta = document.getElementById('historialFichajesHasta');
+    if (elDesde) elDesde.value = fmtFecha(hace30);
+    if (elHasta) elHasta.value = fmtFecha(hoy);
+
+    var ESTADOS_HIST = { trabajando:'Trabajando', pausa:'Pausa', teletrabajo:'Teletrabajo', ausente:'Ausente', finalizada:'Finalizada' };
+
+    async function cargarHistorialFichajes(){
+      var msg = document.getElementById('historialFichajesMsg');
+      var tbody = document.getElementById('listaHistorialFichajes');
+      if (!tbody || !msg) return;
+      msg.textContent = 'Cargando…';
+      tbody.innerHTML = '';
+      var desde = elDesde ? elDesde.value : fmtFecha(hace30);
+      var hasta = elHasta ? elHasta.value : fmtFecha(hoy);
+      try {
+        var res = await sb2.from('fichajes').select('fecha,hora_entrada,hora_salida,estado').gte('fecha', desde).lte('fecha', hasta).order('fecha', { ascending: false });
+        if (res.error) { msg.textContent = 'No se ha podido cargar el historial.'; return; }
+        var data = res.data || [];
+        if (data.length === 0) { msg.textContent = 'Sin fichajes en el rango seleccionado.'; return; }
+        msg.textContent = '';
+        tbody.innerHTML = data.map(function(f){
+          var fechaFmt = new Date(f.fecha + 'T00:00:00').toLocaleDateString('es-ES');
+          var estadoFmt = ESTADOS_HIST[f.estado] || f.estado || '—';
+          return '<tr><td>' + fechaFmt + '</td><td>' + (f.hora_entrada || '—') + '</td><td>' + (f.hora_salida || '—') + '</td><td>' + estadoFmt + '</td></tr>';
+        }).join('');
+      } catch (err) {
+        msg.textContent = 'No se ha podido cargar el historial.';
+      }
+    }
+
+    var btnHist = document.getElementById('btnConsultarHistorialFichajes');
+    if (btnHist) btnHist.addEventListener('click', cargarHistorialFichajes);
+  } catch (e) {
+    console.error('Mi historial de fichajes (modulo añadido): no se pudo inicializar', e);
+  }
+})();
+</script>
 </body>
 </html>
