@@ -254,7 +254,8 @@
   .org-nivel-tag{font-size:9.5px;font-weight:800;color:var(--slate-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;padding-left:2px;}
   .org-nivel-cards{display:flex;flex-wrap:wrap;gap:8px;}
   .org-node{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:9px 11px;flex:1 1 150px;}
-  .org-node.raiz{border-color:var(--brand-300);background:var(--brand-50);}
+  .org-node.raiz{border-color:var(--slate-300);background:var(--slate-50);}
+  .org-node.mio{border-color:var(--brand-400);border-width:2px;background:var(--brand-50);box-shadow:0 0 0 2px var(--brand-100);}
 
   /* formación interna — bloques/módulos */
   .fi-bloque{margin-bottom:14px;}
@@ -702,6 +703,7 @@
         <div class="grid g3" id="epiKpis"></div>
         <table id="tblEpi"><thead><tr><th>Prenda / EPI</th><th>Ud.</th><th>Entrega</th><th>Estado</th></tr></thead>
         <tbody id="listaEpi"></tbody></table>
+        <div id="epiFirmaWrap"></div>
         <p class="callout">La recepción de prendas de uniformidad y EPI queda registrada conforme a la <b>Ley 31/1995 de Prevención de Riesgos Laborales</b>. Al finalizar tu contrato deberás devolver todo el material asignado: la devolución también se firma digitalmente y genera un resguardo que se envía a la gestoría para preparar tu finiquito.</p>
         <button type="button" id="btnSolicitarEpi" style="margin-top:6px;">📝 Solicitar reposición por desgaste →</button>
       </div>
